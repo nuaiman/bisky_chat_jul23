@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterwrite_chat_jul23/features/chatting/controllers/chats_controller.dart';
 import 'package:flutterwrite_chat_jul23/features/chatting/views/chats_view.dart';
 import 'package:flutterwrite_chat_jul23/features/friends/controllers/friends_controller.dart';
+import 'package:flutterwrite_chat_jul23/models/conversation_model.dart';
 
 import '../../../common/error_page.dart';
 import '../../../common/loading_page.dart';
@@ -36,7 +37,25 @@ class ConversationsView extends ConsumerWidget {
                       .getUserModelById(otherUserId);
                   // -------------------
                   String lastMessage = conversation.lastMessage;
-                  // -------------------
+                  // ------------------- Realtime for getting latest Conversation for header -----
+                  ref.watch(getLatestConversationProvider).when(
+                        data: (realTime) {
+                          if (data.contains(
+                              ConversationModel.fromMap(realTime.payload))) {
+                            return;
+                          }
+                          if (realTime.events.contains(
+                              'databases.${AppwriteConstants.databaseId}.collections.${AppwriteConstants.conversationsCollection}.documents.*.create')) {
+                            lastMessage = realTime.payload['message'];
+                            data.add(
+                                ConversationModel.fromMap(realTime.payload));
+                          }
+                        },
+                        error: (error, stackTrace) =>
+                            ErrorText(error: error.toString()),
+                        loading: () => const Loader(),
+                      );
+                  // ------------------- Realtime for getting latest Chat for header -----
                   ref.watch(getLatestChatProvider).when(
                         data: (realTime) {
                           if (realTime.events.contains(

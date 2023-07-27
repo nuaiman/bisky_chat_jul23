@@ -19,6 +19,7 @@ abstract class IChatsApi {
 
   Future<List<Document>> getChats({required String identifier});
 
+  Stream<RealtimeMessage> getLatestConversation();
   // Stream<RealtimeMessage> getLatestChat();
   Stream<RealtimeMessage> getLatestChat();
 }
@@ -102,6 +103,14 @@ class ChatsApi implements IChatsApi {
       ],
     );
     return documents.documents;
+  }
+
+  @override
+  Stream<RealtimeMessage> getLatestConversation() {
+    final realtime = _realtime.subscribe([
+      'databases.${AppwriteConstants.databaseId}.collections.${AppwriteConstants.conversationsCollection}.documents'
+    ]).stream;
+    return realtime;
   }
 
   @override

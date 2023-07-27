@@ -103,6 +103,11 @@ final chatsFutureProvider =
   return chatsController.getChats(identifier: identifier);
 });
 
+final getLatestConversationProvider = StreamProvider.autoDispose((ref) {
+  final chatApi = ref.watch(chatsApiProvider);
+  return chatApi.getLatestConversation();
+});
+
 final getLatestChatProvider = StreamProvider.autoDispose((ref) {
   final chatApi = ref.watch(chatsApiProvider);
   return chatApi.getLatestChat();
