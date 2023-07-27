@@ -4,12 +4,14 @@ class ChatModel {
   final String identifier;
   final String senderId;
   final String message;
+  final String fileUrl;
   final DateTime date;
 
   ChatModel({
     required this.identifier,
     required this.senderId,
     required this.message,
+    required this.fileUrl,
     required this.date,
   });
 
@@ -17,12 +19,14 @@ class ChatModel {
     String? identifier,
     String? senderId,
     String? message,
+    String? fileUrl,
     DateTime? date,
   }) {
     return ChatModel(
       identifier: identifier ?? this.identifier,
       senderId: senderId ?? this.senderId,
       message: message ?? this.message,
+      fileUrl: fileUrl ?? this.fileUrl,
       date: date ?? this.date,
     );
   }
@@ -33,6 +37,7 @@ class ChatModel {
     result.addAll({'identifier': identifier});
     result.addAll({'senderId': senderId});
     result.addAll({'message': message});
+    result.addAll({'fileUrl': fileUrl});
     result.addAll({'date': date.millisecondsSinceEpoch});
 
     return result;
@@ -43,6 +48,7 @@ class ChatModel {
       identifier: map['identifier'] ?? '',
       senderId: map['senderId'] ?? '',
       message: map['message'] ?? '',
+      fileUrl: map['fileUrl'] ?? '',
       date: DateTime.fromMillisecondsSinceEpoch(map['date']),
     );
   }
@@ -54,7 +60,7 @@ class ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel(identifier: $identifier, senderId: $senderId, message: $message, date: $date)';
+    return 'ChatModel(identifier: $identifier, senderId: $senderId, message: $message, fileUrl: $fileUrl, date: $date)';
   }
 
   @override
@@ -65,6 +71,7 @@ class ChatModel {
         other.identifier == identifier &&
         other.senderId == senderId &&
         other.message == message &&
+        other.fileUrl == fileUrl &&
         other.date == date;
   }
 
@@ -73,6 +80,7 @@ class ChatModel {
     return identifier.hashCode ^
         senderId.hashCode ^
         message.hashCode ^
+        fileUrl.hashCode ^
         date.hashCode;
   }
 }

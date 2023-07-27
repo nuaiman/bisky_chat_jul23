@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutterwrite_chat_jul23/common/error_page.dart';
+import 'package:flutterwrite_chat_jul23/common/loading_page.dart';
+import 'package:flutterwrite_chat_jul23/features/chatting/controllers/chats_controller.dart';
 
 import '../../../models/user_model.dart';
 
-class ChatsView extends ConsumerWidget {
+class ChatsView extends ConsumerStatefulWidget {
   final String identifier;
   final UserModel currentUser;
   final UserModel otherUser;
@@ -15,17 +18,101 @@ class ChatsView extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChatsView> createState() => _ChatsViewState();
+}
+
+class _ChatsViewState extends ConsumerState<ChatsView> {
+  final _chatController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _chatController.dispose();
+  }
+
+  void _submitChat(WidgetRef ref) {
+    if (_chatController.text.isEmpty) {
+      return;
+    }
+    ref.read(chatsControllerProvider.notifier).sendChat(
+          identifier: widget.identifier,
+          senderId: widget.currentUser.id,
+          message: _chatController.text,
+        );
+    _chatController.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(otherUser.name),
+        title: Text(widget.otherUser.name),
         actions: [
           CircleAvatar(
             backgroundColor: Colors.black,
-            backgroundImage: NetworkImage(otherUser.imageUrl),
+            backgroundImage: NetworkImage(widget.otherUser.imageUrl),
           ),
           const SizedBox(width: 10),
         ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ref.watch(chatsFutureProvider(widget.identifier)).when(
+                    data: (data) {
+                      return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) => const FlutterLogo(),
+                      );
+                    },
+                    error: (error, stackTrace) =>
+                        ErrorPage(error: error.toString()),
+                    loading: () => const Loader(),
+                  ),
+            ),
+            SizedBox(
+              height: 60,
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.file_copy,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _chatController,
+                      onTapOutside: (event) {
+                        FocusManager.instance.primaryFocus!.unfocus();
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: () => _submitChat(ref),
+                    icon: const RotatedBox(
+                      quarterTurns: 3,
+                      child: Icon(
+                        Icons.send,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }

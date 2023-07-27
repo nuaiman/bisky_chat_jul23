@@ -1,6 +1,9 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutterwrite_chat_jul23/core/failure.dart';
+import 'package:flutterwrite_chat_jul23/core/type_defs.dart';
+import 'package:fpdart/fpdart.dart';
 import '../models/conversation_model.dart';
 
 import '../constants/appwrite_constants.dart';
@@ -10,10 +13,9 @@ import '../models/chat_model.dart';
 abstract class IChatsApi {
   Future<void> startConversation(ConversationModel conversation);
 
-  // Future<List<Document>> getAllConversation(String uid);
   Future<List<Document>> getAllConversation(int number, String uid);
 
-  Future<String?> sendChat({required ChatModel chat});
+  FutureEither<void> sendChat({required ChatModel chat});
 
   Future<List<Document>> getChats({required String identifier});
 
@@ -72,44 +74,17 @@ class ChatsApi implements IChatsApi {
   }
 
   @override
-  Future<String?> sendChat({required ChatModel chat}) async {
-    Document? document;
+  FutureEither<void> sendChat({required ChatModel chat}) async {
     try {
-      document = await _databases.createDocument(
+      await _databases.createDocument(
         databaseId: AppwriteConstants.databaseId,
         collectionId: AppwriteConstants.chatsCollection,
         documentId: ID.unique(),
         data: chat.toMap(),
       );
-      return document.$id;
-      //   document = await _databases.getDocument(
-      //     databaseId: AppwriteConstants.databaseId,
-      //     collectionId: AppwriteConstants.chatsCollection,
-      //     documentId: '${currentUserId}_$otherUserId',
-      //   );
-      //   return document.$id;
-      // } on AppwriteException catch (e) {
-      //   if (e.code == 404) {
-      //     try {
-      //       document = await _databases.getDocument(
-      //         databaseId: AppwriteConstants.databaseId,
-      //         collectionId: AppwriteConstants.chatsCollection,
-      //         documentId: '${otherUserId}_$currentUserId',
-      //       );
-      //       return document.$id;
-      //     } on AppwriteException catch (e) {
-      //       if (e.code == 404) {
-      //         document = await _databases.createDocument(
-      //             databaseId: AppwriteConstants.databaseId,
-      //             collectionId: AppwriteConstants.chatsCollection,
-      //             documentId: '${currentUserId}_$otherUserId',
-      //             data: {});
-      //         return document.$id;
-      //       }
-      //     } catch (e) {
-      //       rethrow;
-      //     }
-      //   }
+      return right(null);
+    } on AppwriteException catch (e, stackTrace) {
+      return left(Failure(e.message ?? '', stackTrace));
     } catch (e) {
       rethrow;
     }

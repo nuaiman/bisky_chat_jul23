@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterwrite_chat_jul23/apis/chats_api.dart';
+import 'package:flutterwrite_chat_jul23/models/chat_model.dart';
 import 'package:flutterwrite_chat_jul23/models/conversation_model.dart';
 import 'package:flutterwrite_chat_jul23/models/user_model.dart';
 
@@ -52,6 +55,28 @@ class ChatsController extends StateNotifier<bool> {
         .toList();
     return conversations1 + conversations2;
   }
+
+  void sendChat({
+    required String identifier,
+    required String senderId,
+    required String message,
+    File? file,
+  }) async {
+    ChatModel chat = ChatModel(
+      identifier: identifier,
+      senderId: senderId,
+      message: message,
+      fileUrl: '',
+      date: DateTime.now(),
+    );
+    await _chatsApi.sendChat(chat: chat);
+  }
+
+  Future<List<ChatModel>> getChats({required String identifier}) async {
+    final listOfChats = await _chatsApi.getChats(identifier: identifier);
+    final chats = listOfChats.map((e) => ChatModel.fromMap(e.data)).toList();
+    return chats;
+  }
 }
 // -----------------------------------------------------------------------------
 
@@ -65,4 +90,10 @@ final conversationsFutureProvider =
     FutureProvider.family((ref, String userId) async {
   final chatsController = ref.watch(chatsControllerProvider.notifier);
   return chatsController.getAllConversation(userId: userId);
+});
+
+final chatsFutureProvider =
+    FutureProvider.family((ref, String identifier) async {
+  final chatsController = ref.watch(chatsControllerProvider.notifier);
+  return chatsController.getChats(identifier: identifier);
 });
