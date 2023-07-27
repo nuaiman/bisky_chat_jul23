@@ -90,7 +90,8 @@ class _ChatsViewState extends ConsumerState<ChatsView> {
                           );
                       return ListView.builder(
                         itemCount: data.length,
-                        itemBuilder: (context, index) => const FlutterLogo(),
+                        itemBuilder: (context, index) =>
+                            Text(data[index].message),
                       );
                     },
                     error: (error, stackTrace) =>
