@@ -1,67 +1,42 @@
 import 'dart:convert';
 
 class ConversationModel {
-  final String postOwnerId;
-  final String requestingUid;
   final String identifier;
-  final String ownerName;
-  final String ownerImageUrl;
-  final String requestingUserName;
-  final String requestingUserImageUrl;
+  final String user1Id;
+  final String user2Id;
   ConversationModel({
-    required this.postOwnerId,
-    required this.requestingUid,
     required this.identifier,
-    required this.ownerName,
-    required this.ownerImageUrl,
-    required this.requestingUserName,
-    required this.requestingUserImageUrl,
+    required this.user1Id,
+    required this.user2Id,
   });
 
   ConversationModel copyWith({
-    String? postOwnerId,
-    String? requestingUid,
     String? identifier,
-    String? ownerName,
-    String? ownerImageUrl,
-    String? requestingUserName,
-    String? requestingUserImageUrl,
+    String? user1Id,
+    String? user2Id,
   }) {
     return ConversationModel(
-      postOwnerId: postOwnerId ?? this.postOwnerId,
-      requestingUid: requestingUid ?? this.requestingUid,
       identifier: identifier ?? this.identifier,
-      ownerName: ownerName ?? this.ownerName,
-      ownerImageUrl: ownerImageUrl ?? this.ownerImageUrl,
-      requestingUserName: requestingUserName ?? this.requestingUserName,
-      requestingUserImageUrl:
-          requestingUserImageUrl ?? this.requestingUserImageUrl,
+      user1Id: user1Id ?? this.user1Id,
+      user2Id: user2Id ?? this.user2Id,
     );
   }
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({'postOwnerId': postOwnerId});
-    result.addAll({'requestingUid': requestingUid});
     result.addAll({'identifier': identifier});
-    result.addAll({'ownerName': ownerName});
-    result.addAll({'ownerImageUrl': ownerImageUrl});
-    result.addAll({'requestingUserName': requestingUserName});
-    result.addAll({'requestingUserImageUrl': requestingUserImageUrl});
+    result.addAll({'user1Id': user1Id});
+    result.addAll({'user2Id': user2Id});
 
     return result;
   }
 
   factory ConversationModel.fromMap(Map<String, dynamic> map) {
     return ConversationModel(
-      postOwnerId: map['postOwnerId'] ?? '',
-      requestingUid: map['requestingUid'] ?? '',
       identifier: map['identifier'] ?? '',
-      ownerName: map['ownerName'] ?? '',
-      ownerImageUrl: map['ownerImageUrl'] ?? '',
-      requestingUserName: map['requestingUserName'] ?? '',
-      requestingUserImageUrl: map['requestingUserImageUrl'] ?? '',
+      user1Id: map['user1Id'] ?? '',
+      user2Id: map['user2Id'] ?? '',
     );
   }
 
@@ -71,32 +46,19 @@ class ConversationModel {
       ConversationModel.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'ConversationModel(postOwnerId: $postOwnerId, requestingUid: $requestingUid, identifier: $identifier, ownerName: $ownerName, ownerImageUrl: $ownerImageUrl, requestingUserName: $requestingUserName, requestingUserImageUrl: $requestingUserImageUrl)';
-  }
+  String toString() =>
+      'ConversationModel(identifier: $identifier, user1Id: $user1Id, user2Id: $user2Id)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is ConversationModel &&
-        other.postOwnerId == postOwnerId &&
-        other.requestingUid == requestingUid &&
         other.identifier == identifier &&
-        other.ownerName == ownerName &&
-        other.ownerImageUrl == ownerImageUrl &&
-        other.requestingUserName == requestingUserName &&
-        other.requestingUserImageUrl == requestingUserImageUrl;
+        other.user1Id == user1Id &&
+        other.user2Id == user2Id;
   }
 
   @override
-  int get hashCode {
-    return postOwnerId.hashCode ^
-        requestingUid.hashCode ^
-        identifier.hashCode ^
-        ownerName.hashCode ^
-        ownerImageUrl.hashCode ^
-        requestingUserName.hashCode ^
-        requestingUserImageUrl.hashCode;
-  }
+  int get hashCode => identifier.hashCode ^ user1Id.hashCode ^ user2Id.hashCode;
 }

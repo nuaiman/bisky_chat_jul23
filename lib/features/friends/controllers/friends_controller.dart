@@ -17,10 +17,14 @@ class FriendsController extends StateNotifier<List<UserModel>> {
       (r) {
         final listOfFriends =
             r.documents.map((e) => UserModel.fromMap(e.data)).toList();
-        print(listOfFriends);
+        state = listOfFriends;
         return listOfFriends;
       },
     );
+  }
+
+  UserModel getUserModelById(String id) {
+    return state.firstWhere((element) => element.id == id);
   }
 }
 //------------------------------------------------------------------------------

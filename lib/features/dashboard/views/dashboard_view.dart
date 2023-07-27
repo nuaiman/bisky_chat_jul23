@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutterwrite_chat_jul23/features/chatting/views/chats_view.dart';
-import 'package:flutterwrite_chat_jul23/features/phone_contacts/views/phone_contacts_view.dart';
+import 'package:flutterwrite_chat_jul23/features/chatting/views/conversations_view.dart';
+import 'package:flutterwrite_chat_jul23/features/friends/views/friends_view.dart';
 import 'package:flutterwrite_chat_jul23/features/settings/views/settings_view.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
@@ -20,8 +20,8 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   }
 
   final _views = const [
-    ChatsView(),
-    PhoneContactsView(),
+    FriendsView(),
+    ConversationsView(),
     SettingsView(),
   ];
 
@@ -36,14 +36,14 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
         items: const [
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.message,
-              ),
-              label: 'Chats'),
-          BottomNavigationBarItem(
-              icon: Icon(
                 Icons.people,
               ),
               label: 'Friends'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.message,
+              ),
+              label: 'Chats'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.settings,
