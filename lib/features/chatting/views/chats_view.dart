@@ -4,6 +4,8 @@ import 'package:flutterwrite_chat_jul23/common/error_page.dart';
 import 'package:flutterwrite_chat_jul23/common/loading_page.dart';
 import 'package:flutterwrite_chat_jul23/features/chatting/controllers/chats_controller.dart';
 
+import '../../../constants/appwrite_constants.dart';
+import '../../../models/chat_model.dart';
 import '../../../models/user_model.dart';
 
 class ChatsView extends ConsumerStatefulWidget {
@@ -61,6 +63,23 @@ class _ChatsViewState extends ConsumerState<ChatsView> {
             Expanded(
               child: ref.watch(chatsFutureProvider(widget.identifier)).when(
                     data: (data) {
+                      ref.watch(getLatestChatProvider).when(
+                            data: (realTime) {
+                              if (data.contains(
+                                  ChatModel.fromMap(realTime.payload))) {
+                                return;
+                              }
+                              if (realTime.events.contains(
+                                      'databases.${AppwriteConstants.databaseId}.collections.${AppwriteConstants.chatsCollection}.documents.*.create') &&
+                                  ((realTime.payload['identifier'] ==
+                                      widget.identifier))) {
+                                data.add(ChatModel.fromMap(realTime.payload));
+                              }
+                            },
+                            error: (error, stackTrace) =>
+                                ErrorText(error: error.toString()),
+                            loading: () => const Loader(),
+                          );
                       return ListView.builder(
                         itemCount: data.length,
                         itemBuilder: (context, index) => const FlutterLogo(),

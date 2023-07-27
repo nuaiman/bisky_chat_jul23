@@ -97,3 +97,8 @@ final chatsFutureProvider =
   final chatsController = ref.watch(chatsControllerProvider.notifier);
   return chatsController.getChats(identifier: identifier);
 });
+
+final getLatestChatProvider = StreamProvider.autoDispose((ref) {
+  final chatApi = ref.watch(chatsApiProvider);
+  return chatApi.getLatestChat();
+});
