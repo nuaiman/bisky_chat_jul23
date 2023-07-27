@@ -43,7 +43,7 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
               icon: Icon(
                 Icons.message,
               ),
-              label: 'Chats'),
+              label: 'Conversations'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.settings,

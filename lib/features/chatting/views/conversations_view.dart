@@ -18,7 +18,7 @@ class ConversationsView extends ConsumerWidget {
           data: (data) {
             return Scaffold(
               appBar: AppBar(
-                title: const Text('C H A T S'),
+                title: const Text('C O N V E S A T I O N S'),
               ),
               body: ListView.separated(
                 itemCount: data.length,
