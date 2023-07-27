@@ -14,6 +14,8 @@ abstract class IUserApi {
   FutureEither<User> createOrUpdateUser({
     required UserModel userModel,
   });
+
+  FutureEither<DocumentList> getAllFriends({required String userId});
 }
 // -----------------------------------------------------------------------------
 
@@ -83,6 +85,21 @@ class UserApi implements IUserApi {
     } on AppwriteException catch (e, stackTrace) {
       return left(
           Failure(e.message ?? 'Some unexpected error occured!', stackTrace));
+    } catch (e, stackTrace) {
+      return left(Failure(e.toString(), stackTrace));
+    }
+  }
+
+  @override
+  FutureEither<DocumentList> getAllFriends({required String userId}) async {
+    try {
+      final friends = await _databases.listDocuments(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.usersCollection,
+          queries: [
+            Query.notEqual('userId', userId),
+          ]);
+      return right(friends);
     } catch (e, stackTrace) {
       return left(Failure(e.toString(), stackTrace));
     }

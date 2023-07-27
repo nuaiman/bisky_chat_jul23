@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterwrite_chat_jul23/apis/user_api.dart';
 import '../view/update_user_profile_view.dart';
-import '../../dashboard/dashboard_view.dart';
+import '../../dashboard/views/dashboard_view.dart';
 import '../../loading/loading_controller.dart';
 import '../../../models/user_model.dart';
 
@@ -12,11 +12,11 @@ import '../../../core/utils.dart';
 import '../view/auth_otp_view.dart';
 import '../view/auth_phone_view.dart';
 
-class AuthControllerNotifier extends StateNotifier<UserModel> {
+class AuthController extends StateNotifier<UserModel> {
   final AuthApi _authApi;
   final UserApi _userApi;
   final LoadingNotifier _loader;
-  AuthControllerNotifier({
+  AuthController({
     required AuthApi authApi,
     required UserApi userApi,
     required LoadingNotifier loader,
@@ -159,12 +159,11 @@ class AuthControllerNotifier extends StateNotifier<UserModel> {
 // -----------------------------------------------------------------------------
 
 final authControllerProvider =
-    StateNotifierProvider<AuthControllerNotifier, UserModel>((ref) {
+    StateNotifierProvider<AuthController, UserModel>((ref) {
   final authApi = ref.watch(authApiProvider);
   final userApi = ref.watch(userApiProvider);
   final loader = ref.watch(loadingProvider.notifier);
-  return AuthControllerNotifier(
-      authApi: authApi, userApi: userApi, loader: loader);
+  return AuthController(authApi: authApi, userApi: userApi, loader: loader);
 });
 
 final getCurrentAccountProvider = FutureProvider((ref) async {

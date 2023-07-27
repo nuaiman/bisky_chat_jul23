@@ -6,7 +6,7 @@ import 'common/error_page.dart';
 import 'common/loading_page.dart';
 import 'features/auth/controller/auth_controller.dart';
 import 'features/auth/view/auth_phone_view.dart';
-import 'features/dashboard/dashboard_view.dart';
+import 'features/dashboard/views/dashboard_view.dart';
 
 void main() {
   runApp(
@@ -22,6 +22,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Bisky Chat',
+      theme: ThemeData(useMaterial3: true),
       home: ref.watch(getCurrentAccountProvider).when(
             data: (data) {
               if (data == null) {
