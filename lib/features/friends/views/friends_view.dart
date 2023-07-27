@@ -34,6 +34,7 @@ class FriendsView extends ConsumerWidget {
                             context: context,
                             user1: currentUserModel,
                             user2: data[index],
+                            lastMessage: '',
                           ),
                       leading: CircleAvatar(
                         backgroundColor: Colors.black,

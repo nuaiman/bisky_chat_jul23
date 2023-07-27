@@ -15,10 +15,12 @@ class ChatsController extends StateNotifier<bool> {
       : _chatsApi = chatsApi,
         super(false);
 
-  void startConversation(
-      {required BuildContext context,
-      required UserModel user1,
-      required UserModel user2}) async {
+  void startConversation({
+    required BuildContext context,
+    required UserModel user1,
+    required UserModel user2,
+    required String lastMessage,
+  }) async {
     List uniqueId = [user1.id, user2.id];
     uniqueId.sort();
     final key = '${uniqueId[0]}_${uniqueId[1]}';
@@ -26,6 +28,7 @@ class ChatsController extends StateNotifier<bool> {
       identifier: key,
       user1Id: uniqueId[0],
       user2Id: uniqueId[1],
+      lastMessage: lastMessage,
     );
     await _chatsApi.startConversation(conversation);
 
@@ -60,6 +63,7 @@ class ChatsController extends StateNotifier<bool> {
     required String identifier,
     required String senderId,
     required String message,
+    required ConversationModel conversation,
     File? file,
   }) async {
     ChatModel chat = ChatModel(
@@ -69,6 +73,7 @@ class ChatsController extends StateNotifier<bool> {
       fileUrl: '',
       date: DateTime.now(),
     );
+    await _chatsApi.startConversation(conversation);
     await _chatsApi.sendChat(chat: chat);
   }
 

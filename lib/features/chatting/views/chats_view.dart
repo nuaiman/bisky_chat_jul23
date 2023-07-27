@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterwrite_chat_jul23/common/error_page.dart';
 import 'package:flutterwrite_chat_jul23/common/loading_page.dart';
 import 'package:flutterwrite_chat_jul23/features/chatting/controllers/chats_controller.dart';
+import 'package:flutterwrite_chat_jul23/models/conversation_model.dart';
 
 import '../../../constants/appwrite_constants.dart';
 import '../../../models/chat_model.dart';
@@ -36,10 +37,17 @@ class _ChatsViewState extends ConsumerState<ChatsView> {
     if (_chatController.text.isEmpty) {
       return;
     }
+    ConversationModel conversation = ConversationModel(
+      identifier: widget.identifier,
+      user1Id: widget.currentUser.id,
+      user2Id: widget.otherUser.id,
+      lastMessage: _chatController.text,
+    );
     ref.read(chatsControllerProvider.notifier).sendChat(
           identifier: widget.identifier,
           senderId: widget.currentUser.id,
           message: _chatController.text,
+          conversation: conversation,
         );
     _chatController.clear();
   }

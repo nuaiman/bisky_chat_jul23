@@ -42,6 +42,7 @@ class ChatsApi implements IChatsApi {
           'identifier': conversation.identifier,
           'user1Id': conversation.user1Id,
           'user2Id': conversation.user2Id,
+          'lastMessage': conversation.lastMessage,
         },
       );
     } on AppwriteException catch (e) {
