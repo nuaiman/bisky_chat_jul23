@@ -24,18 +24,24 @@ class ConversationsView extends ConsumerWidget {
                 itemCount: data.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
-                  final otherUserId = data[index].user1Id == currentUserModel.id
-                      ? data[index].user2Id
-                      : data[index].user1Id;
+                  // -------------------
+                  final conversation = data[index];
+                  final otherUserId =
+                      conversation.user1Id == currentUserModel.id
+                          ? conversation.user2Id
+                          : conversation.user1Id;
                   final otherUser = ref
                       .read(friendsControllerProvider.notifier)
                       .getUserModelById(otherUserId);
+                  // -------------------
+
+                  // -------------------
                   return ListTile(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ChatsView(
-                            identifier: data[index].identifier,
+                            identifier: conversation.identifier,
                             currentUser: currentUserModel,
                             otherUser: otherUser,
                           ),
@@ -47,7 +53,7 @@ class ConversationsView extends ConsumerWidget {
                       backgroundImage: NetworkImage(otherUser.imageUrl),
                     ),
                     title: Text(otherUser.name),
-                    subtitle: Text(data[index].identifier),
+                    // subtitle: Text(conversation.identifier),
                     trailing: Text(otherUser.id),
                   );
                 },
