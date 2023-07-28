@@ -22,6 +22,8 @@ abstract class IChatsApi {
   Stream<RealtimeMessage> getLatestConversation();
   // Stream<RealtimeMessage> getLatestChat();
   Stream<RealtimeMessage> getLatestChat();
+
+  FutureEither<void> updateMessageSeen(String chatId);
 }
 // -----------------------------------------------------------------------------
 
@@ -119,6 +121,25 @@ class ChatsApi implements IChatsApi {
       'databases.${AppwriteConstants.databaseId}.collections.${AppwriteConstants.chatsCollection}.documents'
     ]).stream;
     return realtime;
+  }
+
+  @override
+  FutureEither<void> updateMessageSeen(String chatId) async {
+    try {
+      await _databases.updateDocument(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.chatsCollection,
+          documentId: chatId,
+          data: {
+            'isRead': true,
+          });
+      return right(null);
+    } on AppwriteException catch (e, stackTrace) {
+      print(e.message);
+      return left(Failure(e.message ?? '', stackTrace));
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 // -----------------------------------------------------------------------------

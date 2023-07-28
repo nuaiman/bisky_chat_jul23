@@ -67,10 +67,12 @@ class ChatsController extends StateNotifier<bool> {
     File? file,
   }) async {
     ChatModel chat = ChatModel(
+      id: '',
       identifier: identifier,
       senderId: senderId,
       message: message,
       fileUrl: '',
+      isRead: false,
       date: DateTime.now(),
     );
     await _chatsApi.startConversation(conversation);
@@ -81,6 +83,10 @@ class ChatsController extends StateNotifier<bool> {
     final listOfChats = await _chatsApi.getChats(identifier: identifier);
     final chats = listOfChats.map((e) => ChatModel.fromMap(e.data)).toList();
     return chats;
+  }
+
+  void updateMessageSeen(String chatId) {
+    _chatsApi.updateMessageSeen(chatId);
   }
 }
 // -----------------------------------------------------------------------------
@@ -103,12 +109,12 @@ final chatsFutureProvider =
   return chatsController.getChats(identifier: identifier);
 });
 
-final getLatestConversationProvider = StreamProvider.autoDispose((ref) {
+final getLatestConversationProvider = StreamProvider((ref) {
   final chatApi = ref.watch(chatsApiProvider);
   return chatApi.getLatestConversation();
 });
 
-final getLatestChatProvider = StreamProvider.autoDispose((ref) {
+final getLatestChatProvider = StreamProvider((ref) {
   final chatApi = ref.watch(chatsApiProvider);
   return chatApi.getLatestChat();
 });

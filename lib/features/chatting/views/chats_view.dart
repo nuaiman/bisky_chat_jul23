@@ -8,6 +8,7 @@ import 'package:flutterwrite_chat_jul23/models/conversation_model.dart';
 import '../../../constants/appwrite_constants.dart';
 import '../../../models/chat_model.dart';
 import '../../../models/user_model.dart';
+import '../widgets/chat_item.dart';
 
 class ChatsView extends ConsumerStatefulWidget {
   final String identifier;
@@ -83,6 +84,15 @@ class _ChatsViewState extends ConsumerState<ChatsView> {
                                       widget.identifier))) {
                                 data.add(ChatModel.fromMap(realTime.payload));
                               }
+                              if (realTime.events.contains(
+                                      'databases.${AppwriteConstants.databaseId}.collections.${AppwriteConstants.chatsCollection}.documents.*.update') &&
+                                  ((realTime.payload['identifier'] ==
+                                      widget.identifier))) {
+                                data
+                                    .firstWhere((element) =>
+                                        element.id == realTime.payload['\$id'])
+                                    .isRead = realTime.payload['isRead'];
+                              }
                             },
                             error: (error, stackTrace) =>
                                 ErrorText(error: error.toString()),
@@ -90,8 +100,10 @@ class _ChatsViewState extends ConsumerState<ChatsView> {
                           );
                       return ListView.builder(
                         itemCount: data.length,
-                        itemBuilder: (context, index) =>
-                            Text(data[index].message),
+                        itemBuilder: (context, index) => ChatItem(
+                          chat: data[index],
+                          currentUser: widget.currentUser,
+                        ),
                       );
                     },
                     error: (error, stackTrace) =>
