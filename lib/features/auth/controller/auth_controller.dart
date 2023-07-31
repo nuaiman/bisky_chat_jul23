@@ -29,6 +29,7 @@ class AuthController extends StateNotifier<UserModel> {
             name: '',
             phone: '',
             imageUrl: '',
+            fcmToken: '',
           ),
         );
 
@@ -91,6 +92,7 @@ class AuthController extends StateNotifier<UserModel> {
     String name,
     String phone,
     String imagePath,
+    String? fcmToken,
   ) async {
     _loader.changeLoadingStatus(true);
     final result = await _userApi.createOrUpdateUser(
@@ -99,6 +101,7 @@ class AuthController extends StateNotifier<UserModel> {
         name: name,
         phone: phone,
         imageUrl: imagePath,
+        fcmToken: fcmToken ?? '',
       ),
     );
 
@@ -114,6 +117,7 @@ class AuthController extends StateNotifier<UserModel> {
           name: r.name,
           phone: r.phone,
           imageUrl: r.prefs.data['imageUrl'],
+          fcmToken: r.prefs.data['fcmToken'],
         );
 
         Navigator.of(context).pushAndRemoveUntil(
@@ -138,6 +142,7 @@ class AuthController extends StateNotifier<UserModel> {
         name: user.name,
         phone: user.phone,
         imageUrl: user.prefs.data['imageUrl'],
+        fcmToken: user.prefs.data['fcmToken'] ?? '',
       );
     }
     return user;

@@ -16,6 +16,8 @@ abstract class IUserApi {
   });
 
   FutureEither<DocumentList> getAllFriends({required String userId});
+
+  Future<void> updateUserFcmToken(String userId, String token);
 }
 // -----------------------------------------------------------------------------
 
@@ -102,6 +104,21 @@ class UserApi implements IUserApi {
       return right(friends);
     } catch (e, stackTrace) {
       return left(Failure(e.toString(), stackTrace));
+    }
+  }
+
+  @override
+  Future<void> updateUserFcmToken(String userId, String token) async {
+    try {
+      await _databases.updateDocument(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.usersCollection,
+          documentId: userId,
+          data: {
+            'fcmToken': token,
+          });
+    } catch (e) {
+      rethrow;
     }
   }
 }

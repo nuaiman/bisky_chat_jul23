@@ -45,6 +45,9 @@ class _ChatsViewState extends ConsumerState<ChatsView> {
       lastMessage: _chatController.text,
     );
     ref.read(chatsControllerProvider.notifier).sendChat(
+          ref: ref,
+          currentUser: widget.currentUser,
+          otherUser: widget.otherUser,
           identifier: widget.identifier,
           senderId: widget.currentUser.id,
           message: _chatController.text,

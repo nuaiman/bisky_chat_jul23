@@ -29,17 +29,22 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   appwrite: ^9.0.1
+  cloud_firestore: ^4.8.4
   cupertino_icons: ^1.0.2
+  firebase_core: ^2.15.0
+  firebase_messaging: ^14.6.5
   flutter:
     sdk: flutter
+  flutter_hooks: ^0.20.0
+  flutter_otp_text_field: ^1.1.1
   flutter_riverpod: ^2.3.6
   fpdart: ^0.6.0
+  http: ^1.0.0
   image_picker: ^1.0.1
   intl_phone_number_input: ^0.7.3+1
-  flutter_otp_text_field: ^1.1.1
   shared_preferences: ^2.2.0
   text_field_options_values: ^0.0.1
-  flutter_hooks: ^0.20.0
+  awesome_notifications: ^0.7.4+1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

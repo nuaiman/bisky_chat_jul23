@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterwrite_chat_jul23/features/chatting/views/conversations_view.dart';
+import 'package:flutterwrite_chat_jul23/features/dashboard/controllers/dashboard_controller.dart';
 import 'package:flutterwrite_chat_jul23/features/friends/views/friends_view.dart';
 import 'package:flutterwrite_chat_jul23/features/settings/views/settings_view.dart';
+
+import '../../auth/controller/auth_controller.dart';
 
 class DashboardView extends ConsumerStatefulWidget {
   const DashboardView({super.key});
@@ -12,6 +15,14 @@ class DashboardView extends ConsumerStatefulWidget {
 }
 
 class _DashboardViewState extends ConsumerState<DashboardView> {
+  @override
+  void initState() {
+    super.initState();
+    ref
+        .read(dashboardControllerProvider.notifier)
+        .createFcmToken(ref.read(authControllerProvider).id);
+  }
+
   int _currentIndex = 0;
   void _changePage(int i) {
     setState(() {

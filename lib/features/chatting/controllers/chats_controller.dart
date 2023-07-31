@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterwrite_chat_jul23/apis/chats_api.dart';
+import 'package:flutterwrite_chat_jul23/features/dashboard/controllers/dashboard_controller.dart';
 import 'package:flutterwrite_chat_jul23/models/chat_model.dart';
 import 'package:flutterwrite_chat_jul23/models/conversation_model.dart';
 import 'package:flutterwrite_chat_jul23/models/user_model.dart';
@@ -60,6 +61,9 @@ class ChatsController extends StateNotifier<bool> {
   }
 
   void sendChat({
+    required WidgetRef ref,
+    required UserModel currentUser,
+    required UserModel otherUser,
     required String identifier,
     required String senderId,
     required String message,
@@ -77,6 +81,12 @@ class ChatsController extends StateNotifier<bool> {
     );
     await _chatsApi.startConversation(conversation);
     await _chatsApi.sendChat(chat: chat);
+
+    await ref.read(dashboardControllerProvider.notifier).sendFcm(
+          chat,
+          currentUser,
+          otherUser,
+        );
   }
 
   Future<List<ChatModel>> getChats({required String identifier}) async {

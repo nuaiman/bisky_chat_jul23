@@ -23,7 +23,7 @@ class _UpdateUserProfileViewState extends ConsumerState<UpdateUserProfileView> {
 
   String _nameController = '';
 
-  void _submitData() async {
+  void _submitData(String fcmToken) async {
     if (_nameController.isEmpty) {
       showSnackbar(context, 'Please enter your name');
       return;
@@ -41,6 +41,7 @@ class _UpdateUserProfileViewState extends ConsumerState<UpdateUserProfileView> {
           _nameController,
           '+${widget.userId}',
           _image!.path,
+          fcmToken,
         );
   }
 
@@ -159,7 +160,7 @@ class _UpdateUserProfileViewState extends ConsumerState<UpdateUserProfileView> {
                         ? () {}
                         : isLoading
                             ? () {}
-                            : _submitData,
+                            : () => _submitData(currentUserModel.fcmToken!),
                     child: _isGettingLocation
                         ? const Center(
                             child: CircularProgressIndicator(
